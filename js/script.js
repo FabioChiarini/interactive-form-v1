@@ -107,6 +107,47 @@ $("#name").focus();
 $('#other-title').hide();
 
 
+//select credit card as default payment method
+$("#payment option[value='credit card']").attr('selected', true);
+//remove select_method from payment method
+$("#payment option[value='select_method']").remove();
+//hide paypal and bitcoin tags
+$('div p').hide();
+
+
+//function to display the correct/necessary info for the chosen payment method
+function showPaymentMethod(paymentMethod){
+  if (paymentMethod === 'credit card') {
+    $('div p').hide();
+    $('#credit-card').show();
+  }
+  else if (paymentMethod === 'paypal') {
+    $('#credit-card').hide();
+    $('div p:eq(1)').hide();
+    $('div p:eq(0)').show();
+  }
+  else {
+    $('#credit-card').hide();
+    $('div p:eq(0)').hide();
+    $('div p:eq(1)').show();
+  }
+
+}
+
+
+/*function that let the user choose his payment method and display
+the necessary information accordingly*/
+function choosePaymentMethod(){
+  //event listener on payment method dropdown menu
+  $('#payment').change(function(){
+    //get chosen payment method
+    let selectedPaymentMethod = $(this).children("option:selected").val();
+    //display just the information need for that payment method
+    showPaymentMethod(selectedPaymentMethod);
+  });
+}
+
+
 //initialize total sum
 let total = 0;
 //flag to pass to the function to signal if it's a sum or a subctraction
@@ -114,3 +155,4 @@ let operationFlag = 0;
 
 
 manageCheboxes();
+choosePaymentMethod();
