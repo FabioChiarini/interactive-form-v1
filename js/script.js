@@ -32,37 +32,76 @@ $('#design').change(function() {
     }
 });
 
-//initialize total sum
-let total = 0;
-//get if a checkbox is checked/unchecked
-$('.activities input').click(function(){
-  //check if a checkbox is being checked or unchecked
-  if ($(this).is(":checked") === true) {
 
-    //check which checkbox is being checked and add the respective ammount
-    if ($(this).attr('name') === 'all'){
+//function to update total cost of seminars
+function updateTotal(name, flag) {
+  //check flag value, if 0 it is a sum
+  if (flag === 0){
+    if (name === 'all'){
       total += 200;
     } else {
       total += 100;
     }
-
+  //check flag value, if different from 0 it is a subctraction
   } else {
-
-    //check which checkbox is being unchecked and subtact the respective ammount
-    if ($(this).attr('name') === 'all'){
+    if (name === 'all'){
       total -= 200;
     } else {
       total -= 100;
     }
-
   }
-  //console.log(total);
+}
 
+
+//function to enable/disable a single checkbox based on his current status
+function toggleDisable(inputCheckbox) {
+  //check if checkbox is disabled and enable it
+  if (inputCheckbox.prop("disabled") === true) {
+      inputCheckbox.attr("disabled", false);
+  }
+  //check if checkbox is enabled and disable it
+  else {
+    inputCheckbox.attr("disabled", true);
+  }
+}
+
+
+//function to enable/disable conflicting checkboxes based on user selection
+function toggleCheckbox (name) {
+  //check which checkbox was selected and toggle the conflicting one
+  if (name == 'js-frameworks') {
+    toggleDisable($("input[name*='express']"));
+  }
+  else if (name == 'express') {
+    toggleDisable($("input[name*='js-frameworks']"));
+  }
+  else if (name == 'js-libs') {
+    toggleDisable($("input[name*='node']"));
+  }
+  else if (name == 'node') {
+    toggleDisable($("input[name*='js-libs']"));
+  }
+}
+
+
+//initialize total sum
+let total = 0;
+//flag to pass to the function to signal if it's a sum or a subctraction
+let operationFlag = 0;
+//get if a checkbox is checked/unchecked
+$('.activities input').click(function(){
+  //check if a checkbox is being checked or unchecked
+  if ($(this).is(":checked") === true) {
+    //set the flag to 0, which means a sum
+    operationFlag = 0;
+    //check which checkbox is being checked and add the respective ammount
+    updateTotal($(this).attr('name'), operationFlag)
+    toggleCheckbox($(this).attr('name'));
+  } else {
+    //set the flag to 1, which means a subctraction
+    operationFlag = 1;
+    //check which checkbox is being unchecked and subtact the respective ammount
+    updateTotal($(this).attr('name'), operationFlag)
+    toggleCheckbox($(this).attr('name'));
+  }
 });
-/*Some events are at the same day and time as others.
-If the user selects a workshop, don't allow selection of a workshop at the same day and time --
-you should disable the checkbox and visually indicate that the workshop in the competing time slot isn't available.
-When a user unchecks an activity, make sure that competing activities (if there are any) are no longer disabled.
-As a user selects activities, a running total should display below the list of checkboxes.
-For example, if the user selects "Main Conference", then Total: $200 should appear.
-If they add 1 workshop, the total should change to Total: $300.*/
