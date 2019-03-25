@@ -3,11 +3,6 @@ Treehouse Techdegree:
 FSJS project 3 - Interactive form
 ******************************************/
 
-// set focus on the first text field
-$("#name").focus();
-//hide the text field for the other-title jobs
-$('#other-title').hide();
-
 
 //listen for user selection of shirt design and hide/display colors accordingly
 $('#design').change(function() {
@@ -84,24 +79,38 @@ function toggleCheckbox (name) {
 }
 
 
+//function to manage checkboxes, total costs selected for the user and conflicting option
+function manageCheboxes() {
+  //get if a checkbox is checked/unchecked
+  $('.activities input').click(function(){
+    //check if a checkbox is being checked or unchecked
+    if ($(this).is(":checked") === true) {
+      //set the flag to 0, which means a sum
+      operationFlag = 0;
+      //check which checkbox is being checked and add the respective ammount
+      updateTotal($(this).attr('name'), operationFlag)
+      toggleCheckbox($(this).attr('name'));
+    } else {
+      //set the flag to 1, which means a subctraction
+      operationFlag = 1;
+      //check which checkbox is being unchecked and subtact the respective ammount
+      updateTotal($(this).attr('name'), operationFlag)
+      toggleCheckbox($(this).attr('name'));
+    }
+  });
+}
+
+
+// set focus on the first text field
+$("#name").focus();
+//hide the text field for the other-title jobs
+$('#other-title').hide();
+
+
 //initialize total sum
 let total = 0;
 //flag to pass to the function to signal if it's a sum or a subctraction
 let operationFlag = 0;
-//get if a checkbox is checked/unchecked
-$('.activities input').click(function(){
-  //check if a checkbox is being checked or unchecked
-  if ($(this).is(":checked") === true) {
-    //set the flag to 0, which means a sum
-    operationFlag = 0;
-    //check which checkbox is being checked and add the respective ammount
-    updateTotal($(this).attr('name'), operationFlag)
-    toggleCheckbox($(this).attr('name'));
-  } else {
-    //set the flag to 1, which means a subctraction
-    operationFlag = 1;
-    //check which checkbox is being unchecked and subtact the respective ammount
-    updateTotal($(this).attr('name'), operationFlag)
-    toggleCheckbox($(this).attr('name'));
-  }
-});
+
+
+manageCheboxes();
