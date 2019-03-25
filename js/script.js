@@ -32,12 +32,31 @@ $('#design').change(function() {
     }
 });
 
-
+//initialize total sum
+let total = 0;
 //get if a checkbox is checked/unchecked
 $('.activities input').click(function(){
-  $(this).attr('checked', true);
-  console.log($(this).is(":checked"));
+  //check if a checkbox is being checked or unchecked
+  if ($(this).is(":checked") === true) {
 
+    //check which checkbox is being checked and add the respective ammount
+    if ($(this).attr('name') === 'all'){
+      total += 200;
+    } else {
+      total += 100;
+    }
+
+  } else {
+
+    //check which checkbox is being unchecked and subtact the respective ammount
+    if ($(this).attr('name') === 'all'){
+      total -= 200;
+    } else {
+      total -= 100;
+    }
+
+  }
+  //console.log(total);
 
 });
 /*Some events are at the same day and time as others.
