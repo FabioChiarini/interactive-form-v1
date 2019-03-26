@@ -94,6 +94,7 @@ function manageCheboxes() {
       $('#courseValidation').hide();
     }
 
+
     //check if a checkbox is being checked or unchecked
     if ($(this).is(":checked") === true) {
       //set the flag to 0, which means a sum
@@ -173,8 +174,12 @@ function validateName () {
     let checkInputName = /^\s*$/.test($('#name').val());
     if(checkInputName === true) {
       $('#nameValidation').show();
+      //make the border red if input is wrong
+      $('#name').css('border-color', '#cc0000');
     } else {
       $('#nameValidation').hide();
+      //make the border standard if input is right
+      $('#name').css('border-color', '');
     }
   });
 }
@@ -188,8 +193,12 @@ function validateEmail () {
     let checkInputEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test($('#mail').val());
     if(checkInputEmail === false) {
       $('#emailValidation').show();
+      //make the border red if input is wrong
+      $('#mail').css('border-color', '#cc0000');
     } else {
       $('#emailValidation').hide();
+      //make the border standard if input is right
+      $('#mail').css('border-color', '');
     }
   });
 }
@@ -225,12 +234,12 @@ $('#nameValidation').hide();
 
 /*create span (and immediately hide it) element to display tip
 for the user on how to compile the email correctly*/
-$("#mail").after("<span id='emailValidation'>Email should be a valid email address</span>");
+$("#mail").after("<span id='emailValidation'>Email should be a valid email address</span><br>");
 $('#emailValidation').hide();
 
 /*create span (and immediately hide it) element to display tip
 for the user on how to select checkboxes*/
-$(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span>");
+$(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span><br>");
 $('#courseValidation').hide();
 
 
