@@ -149,6 +149,21 @@ function validateName () {
 }
 
 
+/*function to dynamically check if the user is giving a valid email
+(no empty and no whitespaces) */
+function validateEmail () {
+  $('#mail').on('input', function validateEmail() {
+    //check if email address is valid (kept it simple)
+    let checkInputEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test($('#mail').val());
+    if(checkInputEmail === false) {
+      $('#emailValidation').show();
+    } else {
+      $('#emailValidation').hide();
+    }
+  });
+}
+
+
 // set focus on the first text field
 $("#name").focus();
 //hide the text field for the other-title jobs
@@ -170,9 +185,14 @@ let operationFlag = 0;
 
 
 /*create span (and immediately hide it) element to display tip
-for the user on how to compile the form correctly*/
+for the user on how to compile the name correctly*/
 $("#name").after("<span id='nameValidation'>Name must cointain at least one character</span>");
 $('#nameValidation').hide();
+
+/*create span (and immediately hide it) element to display tip
+for the user on how to compile the email correctly*/
+$("#mail").after("<span id='emailValidation'>Email should be a valid email address</span>");
+$('#emailValidation').hide();
 
 
 
@@ -199,5 +219,6 @@ $('#nameValidation').hide();
 
 
 validateName();
+validateEmail();
 manageCheboxes();
 choosePaymentMethod();
