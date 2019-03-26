@@ -84,6 +84,16 @@ function toggleCheckbox (name) {
 function manageCheboxes() {
   //get if a checkbox is checked/unchecked
   $('.activities input').click(function(){
+    //call the function to check if at least one checkbox is checked
+    isChecked()
+    //if no checkbox is checked display the tip for the user. Otherwise hide it
+    if(!checkedStatus) {
+      $('#courseValidation').show();
+    }
+    else {
+      $('#courseValidation').hide();
+    }
+
     //check if a checkbox is being checked or unchecked
     if ($(this).is(":checked") === true) {
       //set the flag to 0, which means a sum
@@ -99,6 +109,27 @@ function manageCheboxes() {
       toggleCheckbox($(this).attr('name'));
     }
   });
+}
+
+
+//function to check if at least one checkbox is checked
+function isChecked () {
+  /*variable used to update the checkedStatus: if at the end of the function it
+  is still 0, it means that there are no checked checkbox.*/
+  var flag = 0;
+  //loop through all the checkboxes
+  for (var i = 0; i < $('.activities :input').length; i += 1){
+    //check if a checkbox is checked
+    if ($('.activities input:eq('+i+')').is(':checked')) {
+      checkedStatus = true;
+      flag = 1;
+      break;
+    }
+  }
+  //if no checkboxes are checked update checkedStatus
+  if (flag === 0) {
+    checkedStatus = false;
+  }
 }
 
 
@@ -164,6 +195,8 @@ function validateEmail () {
 }
 
 
+
+
 // set focus on the first text field
 $("#name").focus();
 //hide the text field for the other-title jobs
@@ -182,7 +215,8 @@ $('div p').hide();
 let total = 0;
 //flag to pass to the function to signal if it's a sum or a subctraction
 let operationFlag = 0;
-
+//variable to check if at least one checbox is checked
+let checkedStatus = false
 
 /*create span (and immediately hide it) element to display tip
 for the user on how to compile the name correctly*/
@@ -193,6 +227,11 @@ $('#nameValidation').hide();
 for the user on how to compile the email correctly*/
 $("#mail").after("<span id='emailValidation'>Email should be a valid email address</span>");
 $('#emailValidation').hide();
+
+/*create span (and immediately hide it) element to display tip
+for the user on how to select checkboxes*/
+$(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span>");
+$('#courseValidation').hide();
 
 
 
