@@ -8,6 +8,7 @@ FSJS project 3 - Interactive form
 $('#design').change(function() {
   //get the value of the shirt selected by the user
   let selectedShirt = $(this).children("option:selected").val();
+  $('#design option:eq(0)').hide();
   //display/hide the respective colors
   if (selectedShirt === 'js puns') {
       //hide and show the colors for the respective design
@@ -101,20 +102,6 @@ function manageCheboxes() {
 }
 
 
-// set focus on the first text field
-$("#name").focus();
-//hide the text field for the other-title jobs
-$('#other-title').hide();
-
-
-//select credit card as default payment method
-$("#payment option[value='credit card']").attr('selected', true);
-//remove select_method from payment method
-$("#payment option[value='select_method']").remove();
-//hide paypal and bitcoin tags
-$('div p').hide();
-
-
 //function to display the correct/necessary info for the chosen payment method
 function showPaymentMethod(paymentMethod){
   if (paymentMethod === 'credit card') {
@@ -131,7 +118,6 @@ function showPaymentMethod(paymentMethod){
     $('div p:eq(0)').hide();
     $('div p:eq(1)').show();
   }
-
 }
 
 
@@ -148,11 +134,70 @@ function choosePaymentMethod(){
 }
 
 
+/*function to dynamically check if the user is giving a valid name
+(no empty and no whitespaces) */
+function validateName () {
+  $('#name').on('input', function validateName() {
+    //check if input name is empty or just white spaces
+    let checkInputName = /^\s*$/.test($('#name').val());
+    if(checkInputName === true) {
+      $('#nameValidation').show();
+    } else {
+      $('#nameValidation').hide();
+    }
+  });
+}
+
+
+// set focus on the first text field
+$("#name").focus();
+//hide the text field for the other-title jobs
+$('#other-title').hide();
+
+
+//select credit card as default payment method
+$("#payment option[value='credit card']").attr('selected', true);
+//remove select_method from payment method
+$("#payment option[value='select_method']").remove();
+//hide paypal and bitcoin tags
+$('div p').hide();
+
+
 //initialize total sum
 let total = 0;
 //flag to pass to the function to signal if it's a sum or a subctraction
 let operationFlag = 0;
 
 
+/*create span (and immediately hide it) element to display tip
+for the user on how to compile the form correctly*/
+$("#name").after("<span id='nameValidation'>Name must cointain at least one character</span>");
+$('#nameValidation').hide();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+validateName();
 manageCheboxes();
 choosePaymentMethod();
