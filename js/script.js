@@ -248,6 +248,14 @@ $('#courseValidation').hide();
 
 
 
+$("#cc-num").after("<span id='ccValidation'></span>");
+$('#ccValidation').hide();
+
+$("#zip").after("<span id='zipValidation'>Zip Code not valid</span>");
+$('#zipValidation').hide();
+
+$("#cvv").after("<span id='ccvValidation'>cvv number not valid</span>");
+$('#ccvValidation').hide();
 
 
 
@@ -255,6 +263,39 @@ $('#courseValidation').hide();
 
 
 
+
+
+
+
+/*function to dynamically check if the user is giving a valid credit card number,
+zip code and cvv */
+function validateCreditCard () {
+  $('#cc-num').on('input', function validateCCNumber() {
+    //check if credit card number is between 13 and 16 numbers long
+    let ccLength = $('#cc-num').val().length;
+    //check if length is less than 13
+    if(ccLength < 13) {
+      $('#ccValidation').text('CC number is too short');
+      $('#ccValidation').show();
+      //make the border red if input is wrong
+      $('#ccValidation').css('border-color', '#cc0000');
+    } else if (ccLength >= 13 && ccLength <= 16) {
+      $('#ccValidation').hide();
+      //make the border standard if input is right
+      $('#ccValidation').css('border-color', '');
+    }
+    //check if length is more than 16
+    else
+    {
+        $('#ccValidation').text('CC number is too long');
+        $('#ccValidation').show();
+        //make the border red if input is wrong
+        $('#ccValidation').css('border-color', '#cc0000');
+      }
+
+
+  });
+}
 
 
 
@@ -274,3 +315,4 @@ validateName();
 validateEmail();
 manageCheboxes();
 choosePaymentMethod();
+validateCreditCard();
