@@ -93,8 +93,6 @@ function manageCheboxes() {
     else {
       $('#courseValidation').hide();
     }
-
-
     //check if a checkbox is being checked or unchecked
     if ($(this).is(":checked") === true) {
       //set the flag to 0, which means a sum
@@ -109,6 +107,7 @@ function manageCheboxes() {
       updateTotal($(this).attr('name'), operationFlag)
       toggleCheckbox($(this).attr('name'));
     }
+    $('#total').html("Your total cost is: " + total);
   });
 }
 
@@ -225,7 +224,7 @@ let total = 0;
 //flag to pass to the function to signal if it's a sum or a subctraction
 let operationFlag = 0;
 //variable to check if at least one checbox is checked
-let checkedStatus = false
+let checkedStatus = false;
 
 /*create span (and immediately hide it) element to display tip
 for the user on how to compile the name correctly*/
@@ -234,12 +233,17 @@ $('#nameValidation').hide();
 
 /*create span (and immediately hide it) element to display tip
 for the user on how to compile the email correctly*/
-$("#mail").after("<span id='emailValidation'>Email should be a valid email address</span><br>");
+$("#mail").after("<span id='emailValidation'>Email should be a valid email address</span>");
 $('#emailValidation').hide();
+
+/*create span (and immediately hide it) element to display the running total
+for the selected activities*/
+$(".activities").append("<span id='total'>Your total cost is: " + total + "</span>");
+$('#total').show();
 
 /*create span (and immediately hide it) element to display tip
 for the user on how to select checkboxes*/
-$(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span><br>");
+$(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span>");
 $('#courseValidation').hide();
 
 
