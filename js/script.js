@@ -4,6 +4,99 @@ FSJS project 3 - Interactive form
 ******************************************/
 
 
+/* function to set the initial status of the page: focus, field to show/hide,
+span for handling errors to create, initialize variables*/
+function setPage() {
+  // set focus on the first text field
+  $("#name").focus();
+  //hide the text field for the other-title jobs
+  $('#other-title').hide();
+
+  //select credit card as default payment method
+  $("#payment option[value='credit card']").attr('selected', true);
+  //remove select_method from payment method
+  $("#payment option[value='select_method']").remove();
+  //hide paypal and bitcoin tags
+  $('div p').hide();
+
+  //initialize total sum
+  let total = 0;
+  //flag to pass to the function to signal if it's a sum or a subctraction
+  let operationFlag = 0;
+  //variable to check if at least one checbox is checked
+  let checkedStatus = false;
+
+  /*create span (and immediately hide it) element to display tip
+  for the user on how to compile the name correctly*/
+  $("#name").after("<span id='nameValidation'>Name must cointain at least one character</span>");
+  $('#nameValidation').hide();
+
+  /*create span (and immediately hide it) element to display tip
+  for the user on how to compile the email correctly*/
+  $("#mail").after("<span id='emailValidation'>Email should be a valid email address</span>");
+  $('#emailValidation').hide();
+
+  /*create span (and immediately hide it) element to display the running total
+  for the selected activities*/
+  $(".activities").append("<span id='total'>Your total cost is: " + total + "</span>");
+  $('#total').show();
+
+  /*create span (and immediately hide it) element to display tip
+  for the user on how to select checkboxes*/
+  $(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span>");
+  $('#courseValidation').hide();
+
+
+  /*create 3 span to handle cc errore on different elements */
+  $("#cc-num").after("<span id='ccValidation'></span>");
+  $('#ccValidation').hide();
+
+  $("#zip").after("<span id='zipValidation'></span>");
+  $('#zipValidation').hide();
+
+  $("#cvv").after("<span id='cvvValidation'></span>");
+  $('#cvvValidation').hide();
+}
+
+
+/*function to dynamically check if the user is giving a valid name
+(no empty and no whitespaces) */
+function validateName () {
+  $('#name').on('input', function validateName() {
+    //check if input name is empty or just white spaces
+    let checkInputName = /^\s*$/.test($('#name').val());
+    if(checkInputName === true) {
+      $('#nameValidation').show();
+      //make the border red if input is wrong
+      $('#name').css('border-color', '#cc0000');
+    } else {
+      $('#nameValidation').hide();
+      //make the border standard if input is right
+      $('#name').css('border-color', '');
+    }
+  });
+}
+
+
+/*function to dynamically check if the user is giving a valid email
+(no empty and no whitespaces) */
+function validateEmail () {
+  $('#mail').on('input', function validateEmail() {
+    //check if email address is valid (kept it simple)
+    let checkInputEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test($('#mail').val());
+    if(checkInputEmail === false) {
+      $('#emailValidation').show();
+      //make the border red if input is wrong
+      $('#mail').css('border-color', '#cc0000');
+    } else {
+      $('#emailValidation').hide();
+      //make the border standard if input is right
+      $('#mail').css('border-color', '');
+    }
+  });
+}
+
+
 //listen for user selection of shirt design and hide/display colors accordingly
 $('#design').change(function() {
   //get the value of the shirt selected by the user
@@ -27,26 +120,6 @@ $('#design').change(function() {
       $("#color option[value='steelblue']").attr('selected', true);
     }
 });
-
-
-//function to update total cost of seminars
-function updateTotal(name, flag) {
-  //check flag value, if 0 it is a sum
-  if (flag === 0){
-    if (name === 'all'){
-      total += 200;
-    } else {
-      total += 100;
-    }
-  //check flag value, if different from 0 it is a subctraction
-  } else {
-    if (name === 'all'){
-      total -= 200;
-    } else {
-      total -= 100;
-    }
-  }
-}
 
 
 //function to enable/disable a single checkbox based on his current status
@@ -112,6 +185,26 @@ function manageCheboxes() {
 }
 
 
+//function to update total cost of seminars
+function updateTotal(name, flag) {
+  //check flag value, if 0 it is a sum
+  if (flag === 0){
+    if (name === 'all'){
+      total += 200;
+    } else {
+      total += 100;
+    }
+  //check flag value, if different from 0 it is a subctraction
+  } else {
+    if (name === 'all'){
+      total -= 200;
+    } else {
+      total -= 100;
+    }
+  }
+}
+
+
 //function to check if at least one checkbox is checked
 function isChecked () {
   /*variable used to update the checkedStatus: if at the end of the function it
@@ -165,135 +258,60 @@ function choosePaymentMethod(){
 }
 
 
-/*function to dynamically check if the user is giving a valid name
-(no empty and no whitespaces) */
-function validateName () {
-  $('#name').on('input', function validateName() {
-    //check if input name is empty or just white spaces
-    let checkInputName = /^\s*$/.test($('#name').val());
-    if(checkInputName === true) {
-      $('#nameValidation').show();
-      //make the border red if input is wrong
-      $('#name').css('border-color', '#cc0000');
-    } else {
-      $('#nameValidation').hide();
-      //make the border standard if input is right
-      $('#name').css('border-color', '');
+/* function that dinamically handle errors on cc input for 3 fields:
+cc number, zip code, cvv. For each field the errors checked are:
+1) input is empty (or all whitespaces)
+2) input is too short
+3) input is too long
+*/
+function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, error) {
+  //first check if input is empty
+  let checkEmpty = /^\s*$/.test(input.val());
+  if(checkEmpty === true) {
+    fieldToValidate.text('Insert ' + error + ' number');
+    fieldToValidate.show();
+    //make the border red if input is wrong
+    input.css('border-color', '#cc0000');
+  } else {
+    //If not empty, check the length of the input and display an error message accordingly
+      if(length < minLength) {
+        fieldToValidate.text(error + ' number is too short');
+        fieldToValidate.show();
+        //make the border red if input is wrong
+        fieldToValidate.css('border-color', '#cc0000');
+      } else if (length >= minLength && length <= maxLength) {
+        fieldToValidate.hide();
+        //make the border standard if input is right
+        fieldToValidate.css('border-color', '');
+      }
+      else
+      {
+          fieldToValidate.text(error + ' number is too long');
+          fieldToValidate.show();
+          //make the border red if input is wrong
+          fieldToValidate.css('border-color', '#cc0000');
+        }
     }
-  });
-}
-
-
-/*function to dynamically check if the user is giving a valid email
-(no empty and no whitespaces) */
-function validateEmail () {
-  $('#mail').on('input', function validateEmail() {
-    //check if email address is valid (kept it simple)
-    let checkInputEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test($('#mail').val());
-    if(checkInputEmail === false) {
-      $('#emailValidation').show();
-      //make the border red if input is wrong
-      $('#mail').css('border-color', '#cc0000');
-    } else {
-      $('#emailValidation').hide();
-      //make the border standard if input is right
-      $('#mail').css('border-color', '');
-    }
-  });
-}
-
-
-
-
-// set focus on the first text field
-$("#name").focus();
-//hide the text field for the other-title jobs
-$('#other-title').hide();
-
-
-//select credit card as default payment method
-$("#payment option[value='credit card']").attr('selected', true);
-//remove select_method from payment method
-$("#payment option[value='select_method']").remove();
-//hide paypal and bitcoin tags
-$('div p').hide();
-
-
-//initialize total sum
-let total = 0;
-//flag to pass to the function to signal if it's a sum or a subctraction
-let operationFlag = 0;
-//variable to check if at least one checbox is checked
-let checkedStatus = false;
-
-/*create span (and immediately hide it) element to display tip
-for the user on how to compile the name correctly*/
-$("#name").after("<span id='nameValidation'>Name must cointain at least one character</span>");
-$('#nameValidation').hide();
-
-/*create span (and immediately hide it) element to display tip
-for the user on how to compile the email correctly*/
-$("#mail").after("<span id='emailValidation'>Email should be a valid email address</span>");
-$('#emailValidation').hide();
-
-/*create span (and immediately hide it) element to display the running total
-for the selected activities*/
-$(".activities").append("<span id='total'>Your total cost is: " + total + "</span>");
-$('#total').show();
-
-/*create span (and immediately hide it) element to display tip
-for the user on how to select checkboxes*/
-$(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span>");
-$('#courseValidation').hide();
-
-
-
-$("#cc-num").after("<span id='ccValidation'></span>");
-$('#ccValidation').hide();
-
-$("#zip").after("<span id='zipValidation'>Zip Code not valid</span>");
-$('#zipValidation').hide();
-
-$("#cvv").after("<span id='ccvValidation'>cvv number not valid</span>");
-$('#ccvValidation').hide();
-
-
-
-
-
-
-
-
-
+  }
 
 
 /*function to dynamically check if the user is giving a valid credit card number,
 zip code and cvv */
 function validateCreditCard () {
+  //check errors on cc number
   $('#cc-num').on('input', function validateCCNumber() {
-    //check if credit card number is between 13 and 16 numbers long
     let ccLength = $('#cc-num').val().length;
-    //check if length is less than 13
-    if(ccLength < 13) {
-      $('#ccValidation').text('CC number is too short');
-      $('#ccValidation').show();
-      //make the border red if input is wrong
-      $('#ccValidation').css('border-color', '#cc0000');
-    } else if (ccLength >= 13 && ccLength <= 16) {
-      $('#ccValidation').hide();
-      //make the border standard if input is right
-      $('#ccValidation').css('border-color', '');
-    }
-    //check if length is more than 16
-    else
-    {
-        $('#ccValidation').text('CC number is too long');
-        $('#ccValidation').show();
-        //make the border red if input is wrong
-        $('#ccValidation').css('border-color', '#cc0000');
-      }
-
-
+    ccErrorHandler(16, 13, $('#cc-num'), $('#ccValidation'), ccLength, 'cc');
+  });
+  //check errors on zip number
+  $('#zip').on('input', function validateZipNumber() {
+    let zipLength = $('#zip').val().length;
+    ccErrorHandler(5, 5, $('#zip'), $('#zipValidation'), zipLength, 'zip');
+  });
+  //check errors on cvv number
+  $('#cvv').on('input', function validateCvvNumber() {
+    let cvvLength = $('#cvv').val().length;
+    ccErrorHandler(3, 3, $('#cvv'), $('#cvvValidation'), cvvLength, 'cvv');
   });
 }
 
@@ -305,12 +323,7 @@ function validateCreditCard () {
 
 
 
-
-
-
-
-
-
+setPage();
 validateName();
 validateEmail();
 manageCheboxes();
