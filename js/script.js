@@ -45,6 +45,10 @@ function setPage() {
   $(".activities").append("<span id='courseValidation'>At least one seminar must be selected</span>");
   $('#courseValidation').hide();
 
+  //change name of first checkbox in order to display eventual errors on registration
+  $('.activities input')[0].id ='checkErr';
+  $('#checkErr').addClass('error');
+  $('#checkErr').attr('name', 'activities_selection');
 
   /*create 3 span to handle cc errore on different elements */
   $("#cc-num").after("<span id='ccValidation'></span>");
@@ -65,9 +69,9 @@ function setPage() {
   $('#name').addClass('error');
   $('#mail').addClass('error');
 
-  $('#ccValidation').addClass('error');
-  $('#zipValidation').addClass('error');
-  $('#cvvValidation').addClass('error');
+  $('#cc-num').addClass('error');
+  $('#zip').addClass('error');
+  $('#cvv').addClass('error');
 }
 
 
@@ -195,7 +199,7 @@ function toggleCheckbox (name) {
 
 //function to manage checkboxes, total costs selected for the user and conflicting option
 function manageCheboxes() {
-  $('#courseValidation').addClass('error');
+  $('#checkErr').addClass('error');
   //get if a checkbox is checked/unchecked
   $('.activities input').click(function(){
     //call the function to check if at least one checkbox is checked
@@ -203,11 +207,11 @@ function manageCheboxes() {
     //if no checkbox is checked display the tip for the user. Otherwise hide it
     if(!checkedStatus) {
       $('#courseValidation').show();
-      $('#courseValidation').addClass('error');
+      $('#checkErr').addClass('error');
     }
     else {
       $('#courseValidation').hide();
-      $('#courseValidation').removeClass('error');
+      $('#checkErr').removeClass('error');
     }
     //check if a checkbox is being checked or unchecked
     if ($(this).is(":checked") === true) {
@@ -274,16 +278,29 @@ function showPaymentMethod(paymentMethod){
   if (paymentMethod === 'credit card') {
     $('div p').hide();
     $('#credit-card').show();
+    //Add errors checking for credi cards field
+    $('#cc-num').addClass('error');
+    $('#zip').addClass('error');
+    $('#cvv').addClass('error');
+
   }
   else if (paymentMethod === 'paypal') {
     $('#credit-card').hide();
     $('div p:eq(1)').hide();
     $('div p:eq(0)').show();
+    //remove errors from credi cards field
+    $('#cc-num').removeClass('error');
+    $('#zip').removeClass('error');
+    $('#cvv').removeClass('error');
   }
   else {
     $('#credit-card').hide();
     $('div p:eq(0)').hide();
     $('div p:eq(1)').show();
+    //remove errors from credi cards field
+    $('#cc-num').removeClass('error');
+    $('#zip').removeClass('error');
+    $('#cvv').removeClass('error');
   }
 }
 
@@ -313,7 +330,7 @@ function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, er
   if(checkEmpty === true) {
     fieldToValidate.text('Insert ' + error + ' number');
     fieldToValidate.show();
-    $('#credit-card').addClass('error');
+    input.addClass('error');
     //make the border red if input is wrong
     input.css('border-color', '#cc0000');
   } else {
@@ -321,14 +338,14 @@ function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, er
       if(length < minLength) {
         fieldToValidate.text(error + ' number is too short');
         fieldToValidate.show();
-        fieldToValidate.addClass('error');
+        input.addClass('error');
         //make the border red if input is wrong
         input.css('border-color', '#cc0000');
       } else if (length >= minLength && length <= maxLength) {
         fieldToValidate.hide();
         //make the border standard if input is right
         input.css('border-color', '');
-        fieldToValidate.removeClass('error');
+        input.removeClass('error');
       }
       else
       {
@@ -363,27 +380,6 @@ function validateCreditCard () {
 }
 
 
-
-
-$('form').submit(function(e) {
-  if ($('.error')[0]) {
-    e.preventDefault();
-    alert('Please check that all the fields have been compiled correctly')
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
 //initialize total sum
 let total = 0;
 //flag to pass to the function to signal if it's a sum or a subctraction
@@ -391,7 +387,7 @@ let operationFlag = 0;
 //variable to check if at least one checbox is checked
 let checkedStatus = false;
 
-
+//call all the needed function
 setPage();
 checkJobRole();
 validateName();
@@ -400,3 +396,16 @@ selectShirtColor();
 manageCheboxes();
 choosePaymentMethod();
 validateCreditCard();
+
+/* check if the form is valid: if so, register the user. Otherwise block him*/
+$('form').submit(function(e) {
+  if ($('.error')[0]) {
+    e.preventDefault();
+    let errorList = 'Please check that all that the following fields are compiled correctly: ';
+    for(var i = 0; i < ($('.error').length)-1; i += 1){
+      errorList += $('.error')[i].name + ", ";
+    }
+    errorList += $('.error')[$('.error').length-1].name;
+    console.log(errorList);
+  }
+});
