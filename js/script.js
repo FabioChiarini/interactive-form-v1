@@ -73,7 +73,7 @@ function setPage() {
   $('#zip').addClass('error');
   $('#cvv').addClass('error');
 
-  $('#credit-card').append('<p><div id="exp-date"></div></p>');
+  $('#credit-card').append('<div id="exp-date"></div>');
   $("label[for='exp-month']").appendTo("#exp-date");
   $("#exp-month").appendTo("#exp-date");
   $("label[for='exp-year']").appendTo("#exp-date");
@@ -293,6 +293,7 @@ function showPaymentMethod(paymentMethod){
   }
   else if (paymentMethod === 'paypal') {
     $('#credit-card').hide();
+    console.log($('div p:eq(0)'));
     $('div p:eq(1)').hide();
     $('div p:eq(0)').show();
     //remove errors from credi cards field
