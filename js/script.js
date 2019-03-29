@@ -59,6 +59,15 @@ function setPage() {
   //Initially hide color label and dropdown menu
   $('#colors-js-puns label:eq(0)').hide();
   $('#color').hide();
+
+  /*add initial class to error, to make sure the register button will not
+  work if any form is not compiled*/
+  $('#name').addClass('error');
+  $('#mail').addClass('error');
+
+  $('#ccValidation').addClass('error');
+  $('#zipValidation').addClass('error');
+  $('#cvvValidation').addClass('error');
 }
 
 
@@ -109,10 +118,12 @@ function validateEmail () {
       $('#emailValidation').show();
       //make the border red if input is wrong
       $('#mail').css('border-color', '#cc0000');
+      $('#mail').addClass('error');
     } else {
       $('#emailValidation').hide();
       //make the border standard if input is right
       $('#mail').css('border-color', '');
+      $('#mail').removeClass('error');
     }
   });
 }
@@ -120,8 +131,10 @@ function validateEmail () {
 
 
 function selectShirtColor() {
+  $('#design').addClass('error');
   //listen for user selection of shirt design and hide/display colors accordingly
   $('#design').change(function() {
+    $('#design').removeClass('error');
     //show color label and dropdown menu
     $('#colors-js-puns label:eq(0)').show();
     $('#color').show();
@@ -182,6 +195,7 @@ function toggleCheckbox (name) {
 
 //function to manage checkboxes, total costs selected for the user and conflicting option
 function manageCheboxes() {
+  $('#courseValidation').addClass('error');
   //get if a checkbox is checked/unchecked
   $('.activities input').click(function(){
     //call the function to check if at least one checkbox is checked
@@ -189,9 +203,11 @@ function manageCheboxes() {
     //if no checkbox is checked display the tip for the user. Otherwise hide it
     if(!checkedStatus) {
       $('#courseValidation').show();
+      $('#courseValidation').addClass('error');
     }
     else {
       $('#courseValidation').hide();
+      $('#courseValidation').removeClass('error');
     }
     //check if a checkbox is being checked or unchecked
     if ($(this).is(":checked") === true) {
@@ -297,6 +313,7 @@ function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, er
   if(checkEmpty === true) {
     fieldToValidate.text('Insert ' + error + ' number');
     fieldToValidate.show();
+    $('#credit-card').addClass('error');
     //make the border red if input is wrong
     input.css('border-color', '#cc0000');
   } else {
@@ -304,17 +321,20 @@ function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, er
       if(length < minLength) {
         fieldToValidate.text(error + ' number is too short');
         fieldToValidate.show();
+        fieldToValidate.addClass('error');
         //make the border red if input is wrong
         input.css('border-color', '#cc0000');
       } else if (length >= minLength && length <= maxLength) {
         fieldToValidate.hide();
         //make the border standard if input is right
         input.css('border-color', '');
+        fieldToValidate.removeClass('error');
       }
       else
       {
           fieldToValidate.text(error + ' number is too long');
           fieldToValidate.show();
+          fieldToValidate.addClass('error');
           //make the border red if input is wrong
           fieldToValidate.css('border-color', '#cc0000');
         }
