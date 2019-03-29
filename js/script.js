@@ -19,13 +19,6 @@ function setPage() {
   //hide paypal and bitcoin tags
   $('div p').hide();
 
-  //initialize total sum
-  let total = 0;
-  //flag to pass to the function to signal if it's a sum or a subctraction
-  let operationFlag = 0;
-  //variable to check if at least one checbox is checked
-  let checkedStatus = false;
-
   /*create span (and immediately hide it) element to display tip
   for the user on how to compile the name correctly*/
   $("#name").after("<span id='nameValidation'>Name must cointain at least one character</span>");
@@ -62,7 +55,7 @@ function setPage() {
 /*function to dynamically check if the user is giving a valid name
 (no empty and no whitespaces) */
 function validateName () {
-  $('#name').on('input', function validateName() {
+  $('#name').on('input', function validate() {
     //check if input name is empty or just white spaces
     let checkInputName = /^\s*$/.test($('#name').val());
     if(checkInputName === true) {
@@ -81,7 +74,7 @@ function validateName () {
 /*function to dynamically check if the user is giving a valid email
 (no empty and no whitespaces) */
 function validateEmail () {
-  $('#mail').on('input', function validateEmail() {
+  $('#mail').on('input', function validate() {
     //check if email address is valid (kept it simple)
     let checkInputEmail = /^[^@]+@[^@.]+\.[a-z]+$/i.test($('#mail').val());
     if(checkInputEmail === false) {
@@ -278,11 +271,11 @@ function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, er
         fieldToValidate.text(error + ' number is too short');
         fieldToValidate.show();
         //make the border red if input is wrong
-        fieldToValidate.css('border-color', '#cc0000');
+        input.css('border-color', '#cc0000');
       } else if (length >= minLength && length <= maxLength) {
         fieldToValidate.hide();
         //make the border standard if input is right
-        fieldToValidate.css('border-color', '');
+        input.css('border-color', '');
       }
       else
       {
@@ -320,10 +313,38 @@ function validateCreditCard () {
 
 
 
+function checkJobRole () {
 
+  $('#title').change(function() {
+    let selectedJob = $(this).children("option:selected").val();
+    if (selectedJob === 'other') {
+      $('#other-title').show()
+    } else {
+      $('#other-title').hide()
+    }
+
+  });
+}
+
+
+
+
+
+
+
+
+
+
+//initialize total sum
+let total = 0;
+//flag to pass to the function to signal if it's a sum or a subctraction
+let operationFlag = 0;
+//variable to check if at least one checbox is checked
+let checkedStatus = false;
 
 
 setPage();
+checkJobRole();
 validateName();
 validateEmail();
 manageCheboxes();

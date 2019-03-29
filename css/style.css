@@ -118,8 +118,8 @@ span {
   display: none;
   font-size: 1.3em;
   text-align: center;
-  position: relative;
   background: #cc0000;
+  position:relative;
   top: 100%;
   width: 100%;
   padding: 7px 10px;
@@ -127,9 +127,11 @@ span {
   color: #fff;
 }
 
+
 #total {
   background: #03b511;
 }
+
 
 /* =================================
   Page Styles
@@ -179,6 +181,7 @@ span {
 		width: 100%;
 	}
 }
+
 
 @media (min-width: 680px) {
 	header {
