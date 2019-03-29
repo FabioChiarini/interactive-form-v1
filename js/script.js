@@ -49,6 +49,26 @@ function setPage() {
 
   $("#cvv").after("<span id='cvvValidation'></span>");
   $('#cvvValidation').hide();
+
+  //Initially hide color label and dropdown menu
+  $('#colors-js-puns label:eq(0)').hide();
+  $('#color').hide();
+}
+
+
+/* function to check if the selected job role is other and, in that case,
+the other input must be shown */
+function checkJobRole () {
+
+  $('#title').change(function() {
+    let selectedJob = $(this).children("option:selected").val();
+    if (selectedJob === 'other') {
+      $('#other-title').show()
+    } else {
+      $('#other-title').hide()
+    }
+
+  });
 }
 
 
@@ -90,13 +110,18 @@ function validateEmail () {
 }
 
 
-//listen for user selection of shirt design and hide/display colors accordingly
-$('#design').change(function() {
-  //get the value of the shirt selected by the user
-  let selectedShirt = $(this).children("option:selected").val();
-  $('#design option:eq(0)').hide();
-  //display/hide the respective colors
-  if (selectedShirt === 'js puns') {
+
+function selectShirtColor() {
+  //listen for user selection of shirt design and hide/display colors accordingly
+  $('#design').change(function() {
+    //show color label and dropdown menu
+    $('#colors-js-puns label:eq(0)').show();
+    $('#color').show();
+    //get the value of the shirt selected by the user
+    let selectedShirt = $(this).children("option:selected").val();
+    $('#design option:eq(0)').hide();
+    //display/hide the respective colors
+    if (selectedShirt === 'js puns') {
       //hide and show the colors for the respective design
       $('#colors-js-puns option:eq(0), #colors-js-puns option:eq(1), #colors-js-puns option:eq(2)').show();
       $('#colors-js-puns option:eq(3), #colors-js-puns option:eq(4), #colors-js-puns option:eq(5)').hide();
@@ -112,7 +137,8 @@ $('#design').change(function() {
       $("#color option[selected]").attr('selected', false);
       $("#color option[value='steelblue']").attr('selected', true);
     }
-});
+  });
+}
 
 
 //function to enable/disable a single checkbox based on his current status
@@ -313,18 +339,6 @@ function validateCreditCard () {
 
 
 
-function checkJobRole () {
-
-  $('#title').change(function() {
-    let selectedJob = $(this).children("option:selected").val();
-    if (selectedJob === 'other') {
-      $('#other-title').show()
-    } else {
-      $('#other-title').hide()
-    }
-
-  });
-}
 
 
 
@@ -347,6 +361,7 @@ setPage();
 checkJobRole();
 validateName();
 validateEmail();
+selectShirtColor();
 manageCheboxes();
 choosePaymentMethod();
 validateCreditCard();
