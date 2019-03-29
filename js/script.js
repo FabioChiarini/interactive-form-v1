@@ -4,6 +4,12 @@ FSJS project 3 - Interactive form
 ******************************************/
 
 
+function isValid() {
+
+
+
+}
+
 /* function to set the initial status of the page: focus, field to show/hide,
 span for handling errors to create, initialize variables*/
 function setPage() {
@@ -82,10 +88,12 @@ function validateName () {
       $('#nameValidation').show();
       //make the border red if input is wrong
       $('#name').css('border-color', '#cc0000');
+      $('#name').addClass('error');
     } else {
       $('#nameValidation').hide();
       //make the border standard if input is right
       $('#name').css('border-color', '');
+      $('#name').removeClass('error');
     }
   });
 }
@@ -336,6 +344,13 @@ function validateCreditCard () {
 
 
 
+
+$('form').submit(function(e) {
+  if ($('.error')[0]) {
+    e.preventDefault();
+    alert('Please check that all the fields have been compiled correctly')
+  }
+});
 
 
 
