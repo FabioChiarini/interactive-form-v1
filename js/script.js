@@ -51,13 +51,13 @@ function setPage() {
   $('#checkErr').attr('name', 'activities_selection');
 
   /*create 3 span to handle cc errore on different elements */
-  $("#cc-num").after("<span id='ccValidation'></span>");
+  $("#credit-card").after("<span id='ccValidation'></span>");
   $('#ccValidation').hide();
 
-  $("#zip").after("<span id='zipValidation'></span>");
+  $("#credit-card").after("<span id='zipValidation'></span>");
   $('#zipValidation').hide();
 
-  $("#cvv").after("<span id='cvvValidation'></span>");
+  $("#credit-card").after("<span id='cvvValidation'></span>");
   $('#cvvValidation').hide();
 
   //Initially hide color label and dropdown menu
@@ -72,6 +72,13 @@ function setPage() {
   $('#cc-num').addClass('error');
   $('#zip').addClass('error');
   $('#cvv').addClass('error');
+
+  $('#credit-card').append('<p><div id="exp-date"></div></p>');
+  $("label[for='exp-month']").appendTo("#exp-date");
+  $("#exp-month").appendTo("#exp-date");
+  $("label[for='exp-year']").appendTo("#exp-date");
+  $("#exp-year").appendTo("#exp-date");
+
 }
 
 
@@ -401,11 +408,14 @@ validateCreditCard();
 $('form').submit(function(e) {
   if ($('.error')[0]) {
     e.preventDefault();
+    console.log($('.error'));
     let errorList = 'Please check that all that the following fields are compiled correctly: ';
     for(var i = 0; i < ($('.error').length)-1; i += 1){
       errorList += $('.error')[i].name + ", ";
     }
     errorList += $('.error')[$('.error').length-1].name;
-    console.log(errorList);
+    alert(errorList);
+  } else {
+    alert('Registered!');
   }
 });
