@@ -3,13 +3,6 @@ Treehouse Techdegree:
 FSJS project 3 - Interactive form
 ******************************************/
 
-
-function isValid() {
-
-
-
-}
-
 /* function to set the initial status of the page: focus, field to show/hide,
 span for handling errors to create, initialize variables*/
 function setPage() {
@@ -243,7 +236,7 @@ function manageCheboxes() {
 function updateTotal(name, flag) {
   //check flag value, if 0 it is a sum
   if (flag === 0){
-    if (name === 'all'){
+    if (name === 'activities_selection'){
       total += 200;
     } else {
       total += 100;
@@ -286,6 +279,9 @@ function showPaymentMethod(paymentMethod){
     $('div p').hide();
     $('#credit-card').show();
     //Add errors checking for credi cards field
+    $('#cc-num').val('');
+    $('#zip').val('');
+    $('#cvv').val('');
     $('#cc-num').addClass('error');
     $('#zip').addClass('error');
     $('#cvv').addClass('error');
@@ -293,13 +289,18 @@ function showPaymentMethod(paymentMethod){
   }
   else if (paymentMethod === 'paypal') {
     $('#credit-card').hide();
-    console.log($('div p:eq(0)'));
     $('div p:eq(1)').hide();
     $('div p:eq(0)').show();
     //remove errors from credi cards field
     $('#cc-num').removeClass('error');
     $('#zip').removeClass('error');
     $('#cvv').removeClass('error');
+    $('#ccValidation').hide();
+    $('#zipValidation').hide();
+    $('#cvvValidation').hide();
+    $('#ccValidation').css('border-color', '');
+    $('#zipValidation').css('border-color', '');
+    $('#cvvValidation').css('border-color', '');
   }
   else {
     $('#credit-card').hide();
@@ -309,6 +310,12 @@ function showPaymentMethod(paymentMethod){
     $('#cc-num').removeClass('error');
     $('#zip').removeClass('error');
     $('#cvv').removeClass('error');
+    $('#ccValidation').hide();
+    $('#zipValidation').hide();
+    $('#cvvValidation').hide();
+    $('#ccValidation').css('border-color', '');
+    $('#zipValidation').css('border-color', '');
+    $('#cvvValidation').css('border-color', '');
   }
 }
 
@@ -335,13 +342,22 @@ cc number, zip code, cvv. For each field the errors checked are:
 function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, error) {
   //first check if input is empty
   let checkEmpty = /^\s*$/.test(input.val());
+  let checkNumber = /^\d+$/.test(input.val());
   if(checkEmpty === true) {
     fieldToValidate.text('Insert ' + error + ' number');
     fieldToValidate.show();
     input.addClass('error');
     //make the border red if input is wrong
     input.css('border-color', '#cc0000');
-  } else {
+    //check if input is numeric
+  } else if (checkNumber === false) {
+      fieldToValidate.text('Only number are allowed for: ' + error);
+      fieldToValidate.show();
+      input.addClass('error');
+      //make the border red if input is wrong
+      input.css('border-color', '#cc0000');
+    }
+    else {
     //If not empty, check the length of the input and display an error message accordingly
       if(length < minLength) {
         fieldToValidate.text(error + ' number is too short');
@@ -359,12 +375,13 @@ function ccErrorHandler(maxLength, minLength, input, fieldToValidate, length, er
       {
           fieldToValidate.text(error + ' number is too long');
           fieldToValidate.show();
-          fieldToValidate.addClass('error');
+          input.addClass('error');
           //make the border red if input is wrong
           fieldToValidate.css('border-color', '#cc0000');
         }
     }
   }
+
 
 
 /*function to dynamically check if the user is giving a valid credit card number,
