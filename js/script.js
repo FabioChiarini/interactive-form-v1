@@ -243,7 +243,7 @@ function updateTotal(name, flag) {
     }
   //check flag value, if different from 0 it is a subctraction
   } else {
-    if (name === 'all'){
+    if (name === 'activities_selection'){
       total -= 200;
     } else {
       total -= 100;
