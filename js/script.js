@@ -426,13 +426,7 @@ validateCreditCard();
 $('form').submit(function(e) {
   if ($('.error')[0]) {
     e.preventDefault();
-    console.log($('.error'));
-    let errorList = 'Please check that all that the following fields are compiled correctly: ';
-    for(var i = 0; i < ($('.error').length)-1; i += 1){
-      errorList += $('.error')[i].name + ", ";
-    }
-    errorList += $('.error')[$('.error').length-1].name;
-    alert(errorList);
+    alert('Please check that all that the following fields are compiled correctly');
   } else {
     alert('Registered!');
   }
